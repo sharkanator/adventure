@@ -128,3 +128,16 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Ignore thumbnails directory
+thumbnails/
+
+# Ignore the NPCs database file
+npcs.json
+
+# Ignore all images except specific ones
+images/*
+!images/dark-willow-tree.webp
+!images/default.jpg
+!images/whois.webp
+!images/swamp.webp
