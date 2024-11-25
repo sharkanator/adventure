@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suivi des PNJ</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="npc-style.css">
+  <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css" rel="stylesheet">
+</head>
+<body>
+  <div id="app" class="container">
+    <div class="row">
+      <div class="col-12 text-center">
+        <br>
+        <button id="create-npc" class="btn btn-primary">Créer un nouveau PNJ</button>
+        <button id="toggle-dark-mode" class="btn btn-secondary">Mode Sombre</button>
+      </div>
+      <div class="col-12 text-center mt-3">
+        <input id="search-bar" type="text" class="form-control" placeholder="Rechercher des PNJ par nom, objectifs ou tags">
+      </div>
+    </div>
+    <div id="npc-list" class="row mt-4">
+      <!-- NPC tiles will be inserted here -->
+    </div>
+  </div>
+
+  <!-- NPC Modal -->
+  <div id="npc-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Détails du PNJ</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <button id="generate-npc" class="btn btn-emerald">Générer un PNJ</button>
+          <div id="spinner" class="spinner ml-2" style="display:none;"></div>
+        </div>
+        <div class="modal-body">
+          <form id="npc-form">
+            <input type="hidden" name="id" />
+            <img id="image-preview" src="" alt="Aperçu de l'image" style="display: none;" />
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name">Nom</label>
+                <input type="text" class="form-control" name="name" required />
+              </div>
+              <div class="form-group">
+                <label for="raceClass">Race et Classe</label>
+                <input type="text" class="form-control" name="raceClass" />
+              </div>
+              <div class="form-group">
+                <label for="relationships">Relations</label>
+                <input type="text" class="form-control" name="relationships" />
+              </div>
+              <div class="form-group">
+                <label for="tags">Tags</label>
+                <input type="text" class="form-control" name="tags" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="imageFile">Image</label>
+              <input type="file" class="form-control-file" name="imageFile" id="imageFile" />
+            </div>
+            <div class="form-group">
+              <label for="notes">Notes</label>
+              <textarea class="form-control" name="notes" id="notes" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="goals">Objectifs</label>
+              <textarea class="form-control" name="goals"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="appearance">Apparence</label>
+              <textarea class="form-control" name="appearance"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="background">Antécédents</label>
+              <textarea class="form-control" name="background"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="personality">Personnalité</label>
+              <textarea class="form-control" name="personality"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="plotHooks">Accroches de Scénario</label>
+              <textarea class="form-control" name="plotHooks"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="useInGame">Utilisation dans le jeu</label>
+              <textarea class="form-control" name="useInGame"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="fullNpcText">Texte Complet du PNJ</label>
+              <textarea class="form-control" id="full-npc-text" name="fullNpcText" readonly></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+          <button type="button" class="btn btn-danger" id="delete-npc">Supprimer</button>
+          <button type="submit" class="btn btn-primary" form="npc-form">Enregistrer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add this in your NPC generation modal -->
+  <div class="modal fade" id="npc-generation-modal" tabindex="-1" role="dialog" aria-labelledby="npcGenerationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="npcGenerationModalLabel">Personnaliser la Génération de PNJ</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="npc-generation-form">
+            <div class="form-group">
+              <label for="preferredName">Nom préféré</label>
+              <input type="text" id="preferredName" class="form-control" name="preferredName" placeholder="Nom préféré">
+            </div>
+            <div class="form-group">
+              <label for="preferredRace">Race préférée</label>
+              <input type="text" id="preferredRace" class="form-control" name="preferredRace" placeholder="Race préférée">
+            </div>
+            <div class="form-group">
+              <label for="preferredClass">Classe préférée</label>
+              <input type="text" id="preferredClass" class="form-control" name="preferredClass" placeholder="Classe préférée">
+            </div>
+            <button type="submit" class="btn btn-emerald">Personnaliser et Générer</button>
+          </form>
+          <div id="generation-status"></div>
+          <div id="custom-spinner" class="spinner-border" role="status" style="display: none;">
+            <span class="sr-only">Chargement...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stat Block Modal -->
+  <div id="statblock-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Stat Block</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="statblock-modal-id">
+          <textarea id="stat-block-content" class="stat-block form-control" style="display: none;"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+          <button type="button" class="btn btn-generate-statblock" onclick="openGenerateStatBlockModal()">Générer une Stat Block</button>
+          <button type="button" id="save-statblock" class="btn btn-primary">Sauvegarder</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Character Sheet Modal -->
+  <div id="character-sheet-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Feuille de Personnage</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="character-sheet-content" class="character-sheet-content"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+          <button type="button" class="btn btn-primary" onclick="printCharacterSheet()">Imprimer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="generate-statblock-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Générer une Stat Block</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="generate-statblock-form">
+            <div class="form-group">
+              <label for="monster-cr">CR du monstre</label>
+              <input type="text" id="monster-cr" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="monster-type">Type de monstre</label>
+              <input type="text" id="monster-type" class="form-control" required>
+            </div>
+            <div id="statblock-spinner" class="spinner-border" style="display: none;"></div>
+            <div id="generated-statblock-content"></div>
+            <button type="submit" class="btn btn-primary">Générer</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+  <script src="https://cdn.jsdelivr.net/npm/simplemde@1.11.2/dist/simplemde.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+  <script src="npc-script.js"></script>
+</body>
+</html>

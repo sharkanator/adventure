@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: url('background.webp') no-repeat center center fixed; 
+            background-size: cover;
+            color: white;
+        }
+        h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px #000000;
+        }
+        p {
+            font-size: 1.5em;
+            margin-bottom: 40px;
+            text-shadow: 1px 1px 2px #000000;
+        }
+        .button {
+            display: inline-block;
+            margin: 10px;
+            padding: 20px 40px;
+            font-size: 1.5em;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.7);
+            text-decoration: none;
+            border-radius: 10px;
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .button:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+            transform: translateY(-5px);
+        }
+        .shutdown-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .shutdown-button:hover {
+            background-color: darkred;
+            transform: translateY(-5px);
+        }
+    </style>
+    <script>
+        function shutdownServer() {
+            fetch('/shutdown', { method: 'POST' })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Server is shutting down');
+                    } else {
+                        alert('Failed to shut down server');
+                    }
+                });
+        }
+    </script>
+</head>
+<body>
+    <h1>Welcome</h1>
+    <p>Please choose your role:</p>
+    <a href="/players" class="button">Players</a>
+    <a href="/dm" class="button">DM</a>
+    <a href="/npc-tracker" class="button">NPC-Tracker</a>
+    <a href="/soundboard" class="button">Soundboard</a>
+    <button class="shutdown-button" onclick="shutdownServer()">Shutdown Server</button>
+</body>
+</html>

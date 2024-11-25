@@ -1,0 +1,41 @@
+{
+  "name": "adventure",
+  "version": "1.0.0",
+  "description": "A combined tool for managing fog of war and NPC tracking in tabletop RPGs.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": "app.js",
+  "dependencies": {
+    "axios": "^1.7.2",
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "ip": "^2.0.1",
+    "markdown-it": "^14.1.0",
+    "marked": "^13.0.1",
+    "multer": "^1.4.5-lts.1",
+    "node-fetch": "^3.3.2",
+    "open": "^10.1.0",
+    "openai": "^4.51.0",
+    "sharp": "^0.33.4",
+    "simplemde": "^1.11.2",
+    "socket.io": "^4.7.5",
+    "whatwg-url": "^14.0.0"
+  },
+  "pkg": {
+    "assets": [
+      "public/**/*",
+      "images/**/*"
+    ],
+    "targets": [
+      "node14-linux-x64",
+      "node14-macos-x64",
+      "node14-win-x64"
+    ]
+  },
+  "author": "jp",
+  "license": "MIT"
+}

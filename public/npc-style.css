@@ -1,0 +1,713 @@
+/* General Styles */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+h3, p {
+  margin: 0;
+}
+
+button {
+  cursor: pointer;
+}
+
+body.light-mode {
+  background: url('/images/light-sakura-tree.webp') no-repeat center center fixed;
+  background-size: cover;
+  color: #333;
+}
+
+.light-mode .npc-tile {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-color: #ccc;
+}
+
+.light-mode .npc-inner {
+  color: #333;
+}
+
+.light-mode .npc-name {
+  color: #333;
+}
+
+.light-mode .btn:hover {
+  background-color: #eee;
+}
+
+.light-mode .modal-content {
+  background-color: #fff;
+  color: #333;
+}
+
+.light-mode .form-control {
+  background-color: #fff;
+  color: #333;
+  border-color: #ccc;
+}
+
+.light-mode .form-control:focus {
+  background-color: #eee;
+  color: #333;
+  border-color: #bbb;
+}
+
+/* Dark Mode */
+.dark-mode {
+  background-color: #333;
+  color: #f5f5f5;
+}
+
+body.dark-mode {
+  background: url('/images/dark-willow-tree.webp') no-repeat center center fixed;
+  background-size: cover;
+  color: #ddd;
+}
+
+.dark-mode .npc-tile {
+  background-color: rgba(0, 0, 0, 0.7);
+  border-color: #444;
+}
+
+.dark-mode .npc-inner {
+  color: #ddd;
+}
+
+.dark-mode .npc-name {
+  color: #ddd;
+}
+
+.dark-mode .btn {
+  background-color: #444;
+  color: #ddd;
+  border-color: #555;
+}
+
+.dark-mode .btn:hover {
+  background-color: #555;
+}
+
+.dark-mode .modal-content {
+  background-color: #333;
+  color: #ddd;
+}
+
+.dark-mode .form-control {
+  background-color: #444;
+  color: #ddd;
+  border-color: #555;
+}
+
+.dark-mode .form-control:focus {
+  background-color: #555;
+  color: #ddd;
+  border-color: #666;
+}
+
+.dark-mode .badge {
+  background-color: #555;
+  color: #ddd;
+}
+
+/* NPC Tile Styles */
+.npc-tile {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  padding: 15px;
+  transition: box-shadow 0.3s ease;
+  width: 100%;
+  max-width: 250px; /* Ensure consistent width */
+  box-sizing: border-box;
+  perspective: 1000px;
+  width: 250px;
+  height: 350px; /* Fixed height */
+  cursor: pointer;
+  position: relative; /* For button positioning */
+}
+
+.npc-tile:hover {
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.npc-tile:hover .npc-inner {
+  transform: rotateY(180deg);
+}
+
+.npc-inner {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.npc-name {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.npc-front, .npc-back {
+  backface-visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: hidden; /* Ensure content does not overflow */
+}
+
+.npc-front {
+  z-index: 2;
+  transform: rotateY(0deg);
+}
+
+.npc-back {
+  transform: rotateY(180deg);
+  padding: 15px;
+  box-sizing: border-box;
+  overflow-y: auto; /* Add vertical scroll */
+}
+
+/* Ensure the back is hidden when not flipped */
+.npc-tile .npc-inner:not(.flipped) .npc-back {
+  visibility: hidden;
+}
+
+.npc-tile .npc-inner.flipped .npc-front {
+  visibility: hidden;
+}
+
+.npc-back div {
+  margin-bottom: 10px; /* Add some space between sections */
+}
+
+.npc-tile img {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin: 0 auto 10px auto;
+  display: block;
+}
+
+.npc-tile p {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.tags {
+  margin-bottom: 10px;
+}
+
+.badge {
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 3px;
+  padding: 5px;
+  margin-right: 5px;
+}
+
+/* Grid layout for NPC tiles */
+#npc-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* Button Styles */
+.btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+.btn-success {
+  background-color: #28a745;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+}
+
+/* Smaller "View Stat Block" Button */
+.btn-view-stat-block {
+  background-color: #6c757d;
+  padding: 5px 10px;
+  font-size: 0.875em;
+}
+
+.btn-view-stat-block:hover {
+  background-color: #5a6268;
+}
+
+/* Modal Styles */
+.modal-content {
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.modal-header {
+  border-bottom: none;
+}
+
+.modal-title {
+  font-size: 1.75em;
+}
+
+.modal-body {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Stat Block Modal Styles */
+#statblock-modal .modal-dialog {
+  max-width: 90%;
+  width: auto;
+}
+
+#statblock-modal .modal-content {
+  padding: 20px;
+}
+
+.stat-block {
+  background-color: #fdf1dc;
+  border: 1px solid #d65f0b;
+  padding: 20px;
+  font-family: 'Georgia', serif;
+  color: #8b4513;
+}
+
+.stat-block .stat-block-section {
+  margin-bottom: 20px;
+}
+
+.stat-block-overview,
+.stat-block-attributes,
+.stat-block-section {
+  margin-bottom: 10px;
+}
+
+.stat-block-overview div,
+.stat-block-attributes div,
+.stat-block-section div {
+  margin-bottom: 5px;
+}
+
+.stat-block-attributes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.stat-block-attributes div {
+  flex: 1 1 45%; /* Responsive attributes fields */
+  min-width: 100px;
+  text-align: center;
+}
+
+.stat-block-overview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.stat-block-overview div {
+  flex: 1 1 20%; /* Responsive overview fields */
+  min-width: 100px;
+  text-align: center;
+}
+
+/* NPC Modal Styles */
+#npc-modal .modal-dialog {
+  max-width: 90%;
+  width: auto;
+}
+
+#npc-modal .modal-content {
+  padding: 20px;
+}
+
+/* Responsive Form Fields */
+#npc-form .form-group {
+  margin-bottom: 15px;
+}
+
+#npc-form input[type="text"],
+#npc-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical; /* Allow vertical resizing */
+}
+
+#npc-form textarea {
+  min-height: 100px; /* Minimum height for textareas */
+  overflow-y: auto; /* Allow vertical scroll if needed */
+}
+
+#npc-form input[type="file"] {
+  display: block;
+  margin-top: 10px;
+}
+
+#npc-modal .modal-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#npc-modal .modal-body img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 20px;
+}
+
+/* Row layout for first form fields */
+#npc-form .form-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+}
+
+#npc-form .form-row .form-group {
+  flex: 1 1 calc(25% - 10px); /* Responsive fields, adjust as needed */
+  min-width: 200px;
+  margin-right: 10px;
+}
+
+#npc-form .form-row .form-group:last-child {
+  margin-right: 0;
+}
+
+/* Custom Scrollbar */
+.modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background-color: #007bff;
+  border-radius: 3px;
+}
+
+/* Image Preview Styles */
+#image-preview {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+/* Custom Styles for NPC Details Modal */
+#npc-modal .modal-body img {
+  width: 200px;
+  height: 200px;
+}
+
+/* New styles for aligning AC, HP, Speed, and CR fields */
+.stat-block-overview {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.stat-block-overview div {
+  flex: 1;
+  text-align: center;
+  margin: 0 5px;
+}
+
+/* Spinner */
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 4px solid #3498db;
+  width: 20px;
+  height: 20px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+  border-width: 0.3rem;
+  display: inline-block;
+}
+
+#generation-status {
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* Add these styles to the existing CSS */
+
+/* Emerald green button styles */
+.btn-emerald {
+  background-color: #50c878;
+  color: white;
+  border: none;
+}
+
+.btn-emerald:hover {
+  background-color: #45b76a;
+}
+
+/* Center buttons in modal */
+.modal-footer {
+  display: flex;
+  justify-content: center;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#customize-npc-modal .modal-footer,
+#npc-generation-modal .modal-footer {
+  justify-content: center;
+}
+
+#npc-generation-form .btn-emerald {
+  margin-top: 10px;
+  width: 100%;
+}
+
+/* Additional styles for better alignment */
+#generate-npc {
+  margin-top: 10px;
+}
+
+#npc-generation-modal .form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-block-button-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.btn-view-stat-block, .btn-view-character-sheet {
+  background-color: #007bff;
+  padding: 5px 10px;
+  font-size: 0.75em;
+  border: none;
+  border-radius: 3px;
+  width: 48%; /* Make buttons less wide and fit inside the tile */
+}
+
+
+.btn-view-stat-block {
+  background-color: #FFB7C5; /* Light Pink */
+  color: #333;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn-view-stat-block:hover {
+  background-color: #FFA3B3; /* Slightly darker pink for hover effect */
+  color: #333;
+}
+
+.btn-view-stat-block:hover,
+.btn-view-character-sheet:hover {
+  opacity: 0.8;
+}
+
+.btn-view-character-sheet {
+  background-color: #B2E7E8; /* Mint Green */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn-view-character-sheet:hover {
+  background-color: #9CD6D6; /* Slightly darker mint green for hover effect */
+  color: #333;
+}
+
+.btn-generate-statblock {
+  background-color: #B2E7E8; /* Mint Green */
+  color: #333;
+  border: none;
+  border-radius: 3px;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-generate-statblock:hover {
+  background-color: #9CD6D6; /* Slightly darker mint green for hover effect */
+  color: #333;
+}
+
+/* Styles for the character sheet modal */
+.character-sheet {
+  padding: 20px;
+  font-family: 'Georgia', serif;
+  color: #333;
+}
+
+.character-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.character-header .character-image {
+  border-radius: 50%;
+  width: 100px; /* Reduced width */
+  height: 100px; /* Reduced height */
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.character-header h2 {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.character-details {
+  margin-bottom: 20px;
+}
+
+.character-details div {
+  margin-bottom: 10px;
+}
+
+.stat-block {
+  background-color: #fdf1dc;
+  border: 1px solid #d65f0b;
+  padding: 20px;
+  color: #8b4513;
+}
+
+.stat-block-overview,
+.stat-block-attributes,
+.stat-block-section {
+  margin-bottom: 20px;
+}
+
+.stat-block-overview div,
+.stat-block-attributes div,
+.stat-block-section div {
+  margin-bottom: 5px;
+}
+
+/* Printing styles */
+@media print {
+  .modal-content {
+    border: none;
+    box-shadow: none;
+  }
+
+  .modal-header, .modal-footer {
+    display: none;
+  }
+
+  .modal-body {
+    padding: 0;
+  }
+
+  .character-sheet {
+    padding: 0;
+  }
+}
+
+
+@media print {
+  .page-break {
+    page-break-before: always;
+  }
+  .character-sheet {
+    padding: 20px;
+    font-family: 'Georgia', serif;
+    color: #333;
+  }
+  .character-header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .character-header .character-image {
+    border-radius: 50%;
+    width: 100px; /* Reduced width */
+    height: 100px; /* Reduced height */
+    object-fit: cover;
+    margin-bottom: 10px;
+  }
+  .character-header h2 {
+    font-size: 2em;
+    margin-bottom: 10px;
+  }
+  .character-details {
+    margin-bottom: 20px;
+  }
+  .character-details div {
+    margin-bottom: 10px;
+  }
+  .stat-block {
+    background-color: #fdf1dc;
+    border: 1px solid #d65f0b;
+    padding: 20px;
+    color: #8b4513;
+  }
+  .stat-block-overview,
+  .stat-block-attributes,
+  .stat-block-section {
+    margin-bottom: 20px;
+  }
+  .stat-block-overview div,
+  .stat-block-attributes div,
+  .stat-block-section div {
+    margin-bottom: 5px;
+  }
+}
+

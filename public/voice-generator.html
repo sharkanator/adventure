@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Voix pour PNJ - Donjons et Dragons</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            padding: 50px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        button {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        .result {
+            margin-top: 30px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Générateur de Voix pour PNJ</h1>
+    <p>Cliquez sur le bouton ci-dessous pour générer une voix aléatoire pour votre PNJ.</p>
+    <button onclick="generateVoice()">Générer une Voix</button>
+
+    <div class="result" id="result"></div>
+
+    <script>
+        const tones = [
+            "Voix grave et menaçante",
+            "Voix aiguë et perçante",
+            "Voix douce et apaisante",
+            "Voix rauque et usée",
+            "Voix nasillarde et ennuyeuse",
+            "Voix chantante et mélodieuse",
+            "Voix grinçante et désagréable",
+            "Voix monocorde et sans émotion",
+            "Voix tremblante et hésitante",
+            "Voix claire et autoritaire",
+            "Voix lente et traînante",
+            "Voix rapide et précipitée"
+        ];
+
+        const accents = [
+            "Accent campagnard",
+            "Accent noble",
+            "Accent étranger",
+            "Accent de pirate",
+            "Accent de la rue",
+            "Accent elfique",
+            "Accent nain",
+            "Accent guttural",
+            "Accent cérémonial",
+            "Accent théâtral",
+            "Accent mystérieux et énigmatique"
+        ];
+
+        const emotions = [
+            "Voix joyeuse et enjouée",
+            "Voix triste et mélancolique",
+            "Voix en colère et explosive",
+            "Voix apeurée et chuchotante",
+            "Voix arrogante et dédaigneuse",
+            "Voix déprimée et fatiguée",
+            "Voix enthousiaste et énergique",
+            "Voix sarcastique et moqueuse",
+            "Voix désespérée et suppliant",
+            "Voix condescendante et paternaliste"
+        ];
+
+        const ages = [
+            "Voix de vieil homme",
+            "Voix de vieille femme",
+            "Voix d'enfant",
+            "Voix adolescente et rebelle",
+            "Voix mature et posée",
+            "Voix d’un être immortel",
+            "Voix d’un être épuisé ou blessé",
+            "Voix d’un fantôme ou esprit",
+            "Voix d’une créature magique",
+            "Voix d’un personnage enragé",
+            "Voix d’un personnage séduisant et charmeur",
+            "Voix d’un personnage rusé et calculateur"
+        ];
+
+        const behaviors = [
+            "Voix hésitante et incertaine",
+            "Voix surexcitée",
+            "Voix nonchalante",
+            "Voix autoritaire et stricte",
+            "Voix distraite",
+            "Voix polie et formelle",
+            "Voix directe et franche",
+            "Voix sournoise et trompeuse",
+            "Voix attentionnée et compatissante",
+            "Voix impatiente",
+            "Voix énigmatique et mystérieuse",
+            "Voix enjouée et moqueuse"
+        ];
+
+        function getRandomElement(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        function getRandomCategories() {
+            const categories = [
+                { name: "Ton", values: tones },
+                { name: "Accent", values: accents },
+                { name: "Émotion", values: emotions },
+                { name: "Âge", values: ages },
+                { name: "Comportement", values: behaviors }
+            ];
+
+            const selectedCategories = [];
+            while (selectedCategories.length < 2) {
+                const randomCategory = getRandomElement(categories);
+                if (!selectedCategories.includes(randomCategory)) {
+                    selectedCategories.push(randomCategory);
+                }
+            }
+
+            return selectedCategories;
+        }
+
+        function generateVoice() {
+            const selectedCategories = getRandomCategories();
+            const resultText = selectedCategories.map(category => `${category.name}: ${getRandomElement(category.values)}`).join(" et ");
+            document.getElementById("result").innerText = resultText;
+        }
+    </script>
+</body>
+
+</html>
