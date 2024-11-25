@@ -55,7 +55,7 @@ Assurez-vous d'avoir installé :
 
 3. Créez un fichier `.env` dans le répertoire racine et ajoutez votre clé API ChatGPT :
    ```
-   API_KEY=votre-cle-api-chatgpt
+   OPENAI_API_KEY=key-from-chatgpt
    ```
 
 4. Lancez l'application automatiquement avec :
