@@ -3,6 +3,14 @@
 
 Une application pour gérer le **brouillard de guerre** et le suivi des PNJs dans les jeux de rôle sur table (RPG).
 
+<img width="100" alt="image" src="https://github.com/user-attachments/assets/cc7b9cc3-2828-421c-a43f-ba321f2ee0af">
+<img width="100" alt="image" src="https://github.com/user-attachments/assets/79d7473e-e7f7-43f4-8b41-9d9a32ea4fa9">
+<img width="100" alt="image" src="https://github.com/user-attachments/assets/182480b7-ef50-48d1-83c1-540d4a242459">
+<img width="100" alt="image" src="https://github.com/user-attachments/assets/8c6855a6-e685-4864-8932-141c397f58fd">
+
+
+
+
 ## Table des matières
 - [À propos du projet](#à-propos-du-projet)
 - [Fonctionnalités](#fonctionnalités)
