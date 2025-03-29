@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>D&D Soundboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -84,6 +85,28 @@
     </style>
 </head>
 <body>
+	      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="/dm">🧙 MJ Panel</a>
+          <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="/dm">DM</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/players" target="_blank">Player</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/soundboard" target="_blank">Soundboard</a>
+              </li>
+              <li class="nav-item">
+  <button id="shutdown-button" class="btn btn-danger btn-sm ml-3" title="Arrêter le serveur">⏻</button>
+</li>
+
+            </ul>
+          </div>
+        </div>
+      </nav>
 
 <h1>D&D Soundboard</h1>
 <div class="controls">
@@ -219,6 +242,19 @@
 	    });
 	}
 
+  document.addEventListener('DOMContentLoaded', () => {
+    const shutdownButton = document.getElementById('shutdown-button');
+    if (shutdownButton) {
+      shutdownButton.addEventListener('click', () => {
+        if (confirm("Es-tu sûr de vouloir arrêter le serveur ?")) {
+          fetch('/shutdown', { method: 'POST' })
+            .then(() => {
+              document.body.innerHTML = '<h1 style="text-align:center;margin-top:20vh;">🛑 Serveur arrêté</h1>';
+            });
+        }
+      });
+    }
+  });
 
 </script>
 

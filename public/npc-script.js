@@ -74,43 +74,49 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  const displayNpcs = (npcs) => {
-    npcList.innerHTML = '';
-    npcs.forEach((npc) => {
-      const npcTile = document.createElement('div');
-      npcTile.className = 'npc-tile';
-      npcTile.onmouseover = () => npcTile.querySelector('.npc-inner').classList.add('flipped');
-      npcTile.onmouseleave = () => npcTile.querySelector('.npc-inner').classList.remove('flipped');
+const displayNpcs = (npcs) => {
+  npcList.innerHTML = '';
+  npcs.forEach((npc) => {
+    const npcTile = document.createElement('div');
+    npcTile.className = 'npc-tile';
+    npcTile.onmouseover = () => npcTile.querySelector('.npc-inner').classList.add('flipped');
+    npcTile.onmouseleave = () => npcTile.querySelector('.npc-inner').classList.remove('flipped');
 
-      const tagsArray = JSON.parse(npc.tags || '[]');
-      const relationshipsArray = JSON.parse(npc.relationships || '[]');
-      const timestamp = new Date().getTime();
-      npcTile.innerHTML = `
-        <div class="npc-inner">
-          <div class="npc-front" onclick="event.stopPropagation(); openEditModal(${npc.id});">
-            <div class="npc-name">${npc.name}</div>
-            <img src="/images/${npc.image}?${timestamp}" alt="${npc.name}" onerror="this.onerror=null;this.src='/images/whois.webp';" />
-            <p>${npc.raceClass}</p>
-            <div class="tags">${[...tagsArray, ...relationshipsArray].map(tag => `<span class="badge badge-primary">${tag.value}</span>`).join(' ')}</div>
+    const tagsArray = JSON.parse(npc.tags || '[]');
+    const relationshipsArray = JSON.parse(npc.relationships || '[]');
+    const timestamp = new Date().getTime();
 
-          </div>
-          <div class="npc-back" onclick="event.stopPropagation(); openEditModal(${npc.id});">
-            <div><strong>Notes:</strong> ${npc.notes}</div>
-            <div><strong>Objectifs:</strong> ${npc.goals}</div>
-            <div><strong>Accroche de scénario:</strong> ${npc.plotHooks}</div>
-            <div><strong>Utilisation dans le jeu:</strong> ${npc.useInGame}</div>
-            <div><strong>Antécédents:</strong> ${npc.background}</div>
-            <div><strong>Personnalité:</strong> ${npc.personality}</div>
-          </div>
+    npcTile.innerHTML = `
+      <div class="npc-inner">
+        <div class="npc-front" onclick="event.stopPropagation(); openEditModal(${npc.id});">
+          <div class="npc-name">${npc.name}</div>
+          <img src="/images/${npc.image}?${timestamp}" alt="${npc.name}" onerror="this.onerror=null;this.src='/images/whois.webp';" />
+          <p>${npc.raceClass}</p>
+          <div class="tags">${[...tagsArray, ...relationshipsArray].map(tag => `<span class="badge badge-primary">${tag.value}</span>`).join(' ')}</div>
         </div>
-        <div class="stat-block-button-container">
-          <button class="btn btn-view-stat-block stat-block-button" onclick="event.stopPropagation(); openStatBlockModal(${npc.id})">Stat Block</button>
-          <button class="btn btn-view-character-sheet" onclick="event.stopPropagation(); openCharacterSheetModal(${npc.id})">Feuille de Personnage</button>
+        <div class="npc-back" onclick="event.stopPropagation(); openEditModal(${npc.id});">
+          <div><strong>Notes:</strong> ${npc.notes}</div>
+          <div><strong>Objectifs:</strong> ${npc.goals}</div>
+          <div><strong>Accroche de scénario:</strong> ${npc.plotHooks}</div>
+          <div><strong>Utilisation dans le jeu:</strong> ${npc.useInGame}</div>
+          <div><strong>Antécédents:</strong> ${npc.background}</div>
+          <div><strong>Personnalité:</strong> ${npc.personality}</div>
         </div>
-      `;
-      npcList.appendChild(npcTile);
-    });
-  };
+      </div>
+      <div class="stat-block-button-container d-flex justify-content-center mt-2 flex-wrap">
+        <button class="npc-action-button stat" onclick="event.stopPropagation(); openStatBlockModal(${npc.id})" title="📊 Stat Block">📊</button>
+        <button class="npc-action-button sheet" onclick="event.stopPropagation(); openCharacterSheetModal(${npc.id})" title="📄 Fiche de personnage">📄</button>
+        <button class="npc-action-button reveal" onclick="event.stopPropagation(); fetch('/update-image?path=/images/${npc.image}&reveal=true').then(res => res.json()).then(data => data.success && showNotification('Image révélée'))" title="👁 Révéler">👁</button>
+        <button class="npc-action-button fog" onclick="event.stopPropagation(); fetch('/update-image?path=/images/${npc.image}&reveal=false').then(res => res.json()).then(data => data.success && showNotification('Image avec brouillard'))" title="🙈 Brouillard">🙈</button>
+      </div>
+    `;
+    npcList.appendChild(npcTile);
+  });
+};
+
+
+
+
 
   window.openStatBlockModal = async (id) => {
     try {
@@ -317,6 +323,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     adjustTextareaHeight();
   };
+  window.openModal = openModal;
+
 
   const initTagify = (element, whitelist = existingTags) => {
     if (element.name === 'tags') {
@@ -669,4 +677,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+
 

@@ -80,15 +80,6 @@ const npcFormat = `
 
 const uploadsounds = multer({ dest: 'sounds/' });
 
-// Routes for static pages
-app.get('/', (req, res) => {
-  res.sendFile(path.join(rootPath, 'public', 'main.html'));
-});
-
-app.get('/npc-tracker', (req, res) => {
-  res.sendFile(path.join(rootPath, 'public', 'npc-tracker.html'));
-});
-
 app.get('/players', (req, res) => {
   res.sendFile(path.join(rootPath, 'public', 'players.html'));
 });
@@ -101,162 +92,88 @@ app.post('/upload', uploadsounds.single('sound'), (req, res) => {
     res.json({ filename: req.file.filename });
 });
 
-app.get('/dm', async (req, res) => {
-  const imageDir = path.join(rootPath, 'images');
-  const thumbnailDir = path.join(rootPath, 'thumbnails');
 
-  if (!fs.existsSync(thumbnailDir)){
-    fs.mkdirSync(thumbnailDir);
-  }
+app.get('/', (req, res) => {
+  const fs = require('fs');
+  const path = require('path');
+  const rootPath = process.pkg ? path.dirname(process.execPath) : __dirname;
+  const trackerPath = path.join(rootPath, 'public', 'npc-tracker.html');
 
-  fs.readdir(imageDir, async (err, files) => {
+  fs.readFile(trackerPath, 'utf8', (err, htmlContent) => {
     if (err) {
-      return res.send('Failed to load images.');
+      return res.status(500).send('Erreur de chargement de la page npc-tracker.');
     }
 
-    // Sort files alphabetically
-    files = files.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+    const revealSection = `
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="/dm">🧙 MJ Panel</a>
+          <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="/dm">DM</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/players" target="_blank">Player</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/soundboard" target="_blank">Soundboard</a>
+              </li>
+      <li class="nav-item">
+  <button id="shutdown-button" class="btn btn-danger btn-sm ml-3" title="Arrêter le serveur">⏻</button>
+</li>
+            </ul>
+          </div> 
+        </div>
+      </nav>
 
-    // Generate thumbnails if not already present
-    for (const file of files) {
-      const ext = path.extname(file).toLowerCase();
-      const supportedFormats = ['.jpg', '.jpeg', '.png', '.webp'];
-      if (!supportedFormats.includes(ext)) {
-        continue;
-      }
-
-      const thumbnailPath = path.join(thumbnailDir, file);
-      if (!fs.existsSync(thumbnailPath)) {
-        try {
-          await sharp(path.join(imageDir, file))
-            .resize(100)
-            .toFile(thumbnailPath);
-        } catch (error) {
-          console.error(`Error processing file ${file}:`, error);
-        }
-      }
-    }
-
-    let imageHtml = files.map(file => `
-      <div class="image-item" data-name="${file}" data-image-path="/images/${file}" style="display: inline-block; margin: 10px; text-align: center;">
-        <img src="/thumbnails/${file}" loading="lazy" style="width: 100px; height: auto; display: block; margin-bottom: 5px;">
-        <span>${file}</span> <!-- Displaying the name of the image -->
+      <div class="container text-center" style="margin-top: 30px;">
+        <h1 class="text-white" style="text-shadow: 2px 2px 4px #000">Reveal Management</h1>
+        <div id="canvasContainer" style="position: relative; width: 100%; height: 60vh; overflow: hidden; margin-bottom: 20px;">
+          <canvas id="mapCanvas" style="position: absolute; top: 0; left: 0;"></canvas>
+        </div>
+        <button id="toggleFog" class="btn btn-dark mb-2">Toggle Fog of War</button>
+        <hr class="bg-light">
       </div>
-    `).join('');
+      <script>
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 50);
+      </script>
+    `;
 
-    res.send(`
-      <html>
-      <head>
-        <title>DM Page</title>
-        <style>
-          body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            background: url('background.webp') no-repeat center center fixed; 
-            background-size: cover;
-            color: white;
-          }
-          h1 {
-            text-align: center;
-            padding: 20px;
-            text-shadow: 2px 2px 4px #000000;
-          }
-          #canvasContainer {
-            position: relative;
-            width: 100%;
-            height: 60vh;
-            overflow: hidden;
-            margin-bottom: 20px;
-          }
-          canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-          }
-          .image-item {
-            display: inline-block;
-            margin: 10px;
-            text-align: center;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-          }
-          .image-item img {
-            width: 100px;
-            height: auto;
-            display: block;
-            margin-bottom: 5px;
-          }
-          .button {
-            display: inline-block;
-            margin: 10px;
-            padding: 10px 20px;
-            font-size: 1em;
-            color: white;
-            background-color: rgba(0, 0, 0, 0.7);
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s, transform 0.3s;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-          }
-          .button:hover {
-            background-color: rgba(0, 0, 0, 0.9);
-            transform: translateY(-5px);
-          }
-          .search-bar {
-            margin: 10px 0;
-            display: block;
-            width: 100%;
-            max-width: 400px;
-            padding: 10px;
-            margin: 10px auto;
-            border: none;
-            border-radius: 5px;
-          }
-        </style>
-        <script>
-          document.addEventListener('DOMContentLoaded', function() {
-            const searchBar = document.createElement('input');
-            searchBar.type = 'text';
-            searchBar.id = 'search-bar';
-            searchBar.className = 'search-bar';
-            searchBar.placeholder = 'Search images...';
-            document.getElementById('manage-content').insertAdjacentElement('beforebegin', searchBar);
-
-            const images = Array.from(document.querySelectorAll('.image-item'));
-
-            searchBar.addEventListener('input', function() {
-              const query = searchBar.value.toLowerCase();
-              images.forEach(image => {
-                const name = image.dataset.name.toLowerCase();
-                image.style.display = name.includes(query) ? 'inline-block' : 'none';
-              });
-            });
-          });
-        </script>
-      </head>
-      <body>
-        <h1>Reveal Management</h1>
-        <div id="canvasContainer">
-          <canvas id="mapCanvas"></canvas>
-        </div>
-        <button id="toggleFog" class="button">Toggle Fog of War</button>
-        <hr>
-        <h1>Manage Images</h1>
-        <div id="manage-content">
-          ${imageHtml}
-        </div>
+    const modifiedHtml = htmlContent
+      .replace('<body>', '<body>' + revealSection)
+      .replace(
+        '</body>',
+        `
         <script src="/socket.io/socket.io.js"></script>
-        <script src="reveal.js"></script>
-        <script src="manage.js"></script>
-      </body>
-      </html>
-    `);
+        <script src="/reveal.js"></script>
+        <script src="/dm-extension.js"></script>
+          <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const shutdownButton = document.getElementById('shutdown-button');
+    if (shutdownButton) {
+      shutdownButton.addEventListener('click', () => {
+        if (confirm("Es-tu sûr de vouloir arrêter le serveur ?")) {
+          fetch('/shutdown', { method: 'POST' })
+            .then(() => {
+              document.body.innerHTML = '<h1 style="text-align:center;margin-top:20vh;">🛑 Serveur arrêté</h1>';
+            });
+        }
+      });
+    }
+  });
+</script>
+
+        </body>`
+      );
+
+    res.send(modifiedHtml);
   });
 });
+
+
 
 
 // Routes for NPC management
