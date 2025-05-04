@@ -141,3 +141,4 @@ images/*
 !images/default.jpg
 !images/whois.webp
 !images/swamp.webp
+.DS_Store
