@@ -1,125 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>D&D Soundboard</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #2c3e50;
-            color: #ecf0f1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-        h1 {
-            margin-bottom: 20px;
-            text-shadow: 2px 2px #34495e;
-        }
-        .soundboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 10px;
-            width: 80%;
-        }
-        .button, .stop-button {
-            background-color: #34495e;
-            border: none;
-            border-radius: 5px;
-            color: #ecf0f1;
-            padding: 15px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .button:hover, .stop-button:hover {
-            background-color: #2980b9;
-        }
-        .controls {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .time-remaining {
-            margin-top: 10px;
-            font-size: 18px;
-        }
-        #categoryFilter {
-            width: 200px;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #34495e;
-            background-color: #34495e;
-            color: #ecf0f1;
-            font-size: 16px;
-        }
-        #volumeControl {
-            width: 80%;
-            margin-top: 10px;
-        }
-        #progressBar {
-            width: 80%;
-            height: 20px;
-            margin-top: 10px;
-        }
-        input[type="file"] {
-            margin-top: 20px;
-        }
-        @media (max-width: 768px) {
-            .soundboard {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            }
-        }
-        .light-mode {
-            background-color: #ecf0f1;
-            color: #2c3e50;
-        }
-        .light-mode .button {
-            background-color: #bdc3c7;
-            color: #2c3e50;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>D&D Ambiances & Soundboard</title>
+  <link rel="stylesheet" href="sound-style.css" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
-	      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container">
-          <a class="navbar-brand" href="/dm">🧙 MJ Panel</a>
-          <div class="collapse navbar-collapse">
-            <ul class="navbar-nav ml-auto">
-              <li class="nav-item">
-                <a class="nav-link" href="/dm">DM</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/players" target="_blank">Player</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/soundboard" target="_blank">Soundboard</a>
-              </li>
-              <li class="nav-item">
-  <button id="shutdown-button" class="btn btn-danger btn-sm ml-3" title="Arrêter le serveur">⏻</button>
-</li>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="/dm">🧙 MJ Panel</a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item"><a class="nav-link" href="/dm">DM</a></li>
+          <li class="nav-item"><a class="nav-link" href="/players" target="_blank">Player</a></li>
+          <li class="nav-item"><a class="nav-link" href="/soundboard" target="_blank">Soundboard</a></li>
+          <li class="nav-item">
+            <button id="shutdown-button" class="btn btn-danger btn-sm ml-3" title="Arrêter le serveur">⏻</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-            </ul>
-          </div>
-        </div>
-      </nav>
+  <h1 style="margin-top: 80px;">🎵 Ambiances musicales</h1>
+  <div class="grid">
+    <button onclick="playRandom('foret')">🌲 Forêt</button>
+    <button onclick="playRandom('donjon')">🕯️ Donjon</button>
+    <button onclick="playRandom('combat')">⚔️ Combat</button>
+    <button onclick="playRandom('ville')">👑 Ville</button>
+    <button onclick="playRandom('magie')">🔮 Magie</button>
+    <button onclick="playRandom('tension')">🌧️ Tension</button>
+    <button onclick="playRandom('exploration')">🌄 Exploration</button>
+    <button onclick="playRandom('emotion')">🎭 Émotion</button>
+    <button onclick="playRandom('dramatique')">Dramatique</button>
+  </div>
+  <div id="player"></div>
+  <div class="music-controls">
+    <button onclick="playPrevious()">⏮️ Précédent</button>
+    <button onclick="pauseVideo()">⏸️ Pause</button>
+    <button onclick="resumeVideo()">▶️ Reprendre</button>
+    <button onclick="playNext()">⏭️ Suivant</button>
+  </div>
 
-<h1>D&D Soundboard</h1>
-<div class="controls">
+
+  <h1 style="margin-top: 60px;">🎛️ Soundboard</h1>
+  <div class="controls">
     <select id="categoryFilter" onchange="filterSounds()">
-        <option value="all">All</option>
-        <option value="ambiance">Ambiance</option>
-        <option value="effects">Effects</option>
-        <option value="music">Music</option>
+      <option value="all">All</option>
+      <option value="ambiance">Ambiance</option>
+      <option value="effects">Effects</option>
+      <option value="music">Music</option>
     </select>
-</div>
-<br>
+  </div>
+  <br>
 
-<div class="soundboard" id="soundboard">
+  <div class="soundboard" id="soundboard">
     <button class="button effects" onclick="playSound('alert-lose-stealth.mp3')">Alert - Lose Stealth</button>
     <button class="button effects" onclick="playSound('crickets.mp3')">Crickets</button>
     <button class="button effects" onclick="playSound('dramatic-fart.mp3')">Dramatic Fart</button>
@@ -133,130 +71,120 @@
     <button class="button" onclick="playSound('wilhelm-scream.mp3')">Wilhelm Scream</button>
     <button class="button" onclick="playSound('wow-anime.mp3')">Wow (Anime)</button>
     <button class="button" onclick="playSound('Ba Dum Tss!.mp3')">Ba Dum Tss!</button>
-</div>
+  </div>
 
-<div class="controls">
+  <div class="controls">
     <button class="stop-button" onclick="stopSound()">Stop Sound</button>
     <div class="time-remaining" id="timeRemaining">Time Remaining: 0:00</div>
     <progress id="progressBar" value="0" max="100"></progress>
     <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="1" onchange="adjustVolume(this.value)">
     <input type="file" id="soundUpload" accept="audio/*" onchange="uploadSound()">
     <button class="button" onclick="toggleTheme()">Toggle Dark/Light Mode</button>
-</div>
+  </div>
 
-<script>
-	let currentAudio = null;
-	let timerInterval = null;
-	let soundQueue = [];
+  <script src="sound-script.js"></script>
+  <script>
+    let currentAudio = null;
+    let timerInterval = null;
+    let soundQueue = [];
 
-	function playSound(fileName) {
-	    if (currentAudio) {
-	        currentAudio.pause();  // Pause the current sound
-	        currentAudio.currentTime = 0;  // Reset time to 0
-	        clearInterval(timerInterval);  // Clear any existing timer
-	    }
+    function playSound(fileName) {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        clearInterval(timerInterval);
+      }
+      startPlaying(fileName);
+    }
 
-	    startPlaying(fileName);  // Start playing the new sound
-	}
+    function startPlaying(fileName) {
+      currentAudio = new Audio(`/sounds/${fileName}`);
+      currentAudio.volume = document.getElementById('volumeControl').value;
+      currentAudio.play();
+      updateTimer();
+      timerInterval = setInterval(updateTimer, 1000);
+      currentAudio.onended = () => {
+        if (soundQueue.length > 0) {
+          startPlaying(soundQueue.shift());
+        } else {
+          clearInterval(timerInterval);
+          document.getElementById('timeRemaining').textContent = "Time Remaining: 0:00";
+          document.getElementById('progressBar').value = 0;
+        }
+      };
+    }
 
-	function startPlaying(fileName) {
-	    currentAudio = new Audio(`/sounds/${fileName}`);
-	    currentAudio.volume = document.getElementById('volumeControl').value;
-	    currentAudio.play();
-	    updateTimer();
-	    timerInterval = setInterval(updateTimer, 1000);
+    function stopSound() {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        clearInterval(timerInterval);
+        soundQueue = [];
+        document.getElementById('timeRemaining').textContent = "Time Remaining: 0:00";
+        document.getElementById('progressBar').value = 0;
+      }
+    }
 
-	    currentAudio.onended = () => {
-	        if (soundQueue.length > 0) {
-	            startPlaying(soundQueue.shift());
-	        } else {
-	            clearInterval(timerInterval);
-	            document.getElementById('timeRemaining').textContent = "Time Remaining: 0:00";
-	            document.getElementById('progressBar').value = 0;
-	        }
-	    };
-	}
+    function updateTimer() {
+      if (currentAudio && !isNaN(currentAudio.duration)) {
+        const timeRemaining = Math.floor(currentAudio.duration - currentAudio.currentTime);
+        const minutes = Math.floor(timeRemaining / 60);
+        const seconds = timeRemaining % 60;
+        document.getElementById('timeRemaining').textContent = `Time Remaining: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+        const percentage = (currentAudio.currentTime / currentAudio.duration) * 100;
+        document.getElementById('progressBar').value = percentage;
+      }
+    }
 
-	function stopSound() {
-	    if (currentAudio) {
-	        currentAudio.pause();
-	        currentAudio.currentTime = 0;
-	        clearInterval(timerInterval);
-	        soundQueue = [];  // Clear the queue
-	        document.getElementById('timeRemaining').textContent = "Time Remaining: 0:00";
-	        document.getElementById('progressBar').value = 0;
-	    }
-	}
+    function adjustVolume(volume) {
+      if (currentAudio) {
+        currentAudio.volume = volume;
+      }
+    }
 
-	function updateTimer() {
-	    if (currentAudio && !isNaN(currentAudio.duration)) {
-	        const timeRemaining = Math.floor(currentAudio.duration - currentAudio.currentTime);
-	        const minutes = Math.floor(timeRemaining / 60);
-	        const seconds = timeRemaining % 60;
-	        document.getElementById('timeRemaining').textContent = `Time Remaining: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+    function uploadSound() {
+      const fileInput = document.getElementById('soundUpload');
+      const file = fileInput.files[0];
+      const formData = new FormData();
+      formData.append('sound', file);
+      fetch('/upload', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => console.log('Sound uploaded successfully:', data))
+      .catch(error => console.error('Error uploading sound:', error));
+    }
 
-	        const percentage = (currentAudio.currentTime / currentAudio.duration) * 100;
-	        document.getElementById('progressBar').value = percentage;
-	    }
-	}
+    function toggleTheme() {
+      document.body.classList.toggle('light-mode');
+    }
 
-	function adjustVolume(volume) {
-	    if (currentAudio) {
-	        currentAudio.volume = volume;
-	    }
-	}
-
-	function uploadSound() {
-	    const fileInput = document.getElementById('soundUpload');
-	    const file = fileInput.files[0];
-	    
-	    const formData = new FormData();
-	    formData.append('sound', file);
-
-	    fetch('/upload', {
-	        method: 'POST',
-	        body: formData
-	    })
-	    .then(response => response.json())
-	    .then(data => {
-	        console.log('Sound uploaded successfully:', data);
-	        // Add a new button for the uploaded sound if needed
-	    })
-	    .catch(error => console.error('Error uploading sound:', error));
-	}
-
-	function toggleTheme() {
-	    const body = document.body;
-	    body.classList.toggle('light-mode');
-	}
-
-	function filterSounds() {
-	    const filter = document.getElementById('categoryFilter').value;
-	    const buttons = document.querySelectorAll('.soundboard .button');
-	    buttons.forEach(button => {
-	        if (filter === 'all' || button.classList.contains(filter)) {
-	            button.style.display = 'inline-block';
-	        } else {
-	            button.style.display = 'none';
-	        }
-	    });
-	}
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const shutdownButton = document.getElementById('shutdown-button');
-    if (shutdownButton) {
-      shutdownButton.addEventListener('click', () => {
-        if (confirm("Es-tu sûr de vouloir arrêter le serveur ?")) {
-          fetch('/shutdown', { method: 'POST' })
-            .then(() => {
-              document.body.innerHTML = '<h1 style="text-align:center;margin-top:20vh;">🛑 Serveur arrêté</h1>';
-            });
+    function filterSounds() {
+      const filter = document.getElementById('categoryFilter').value;
+      const buttons = document.querySelectorAll('.soundboard .button');
+      buttons.forEach(button => {
+        if (filter === 'all' || button.classList.contains(filter)) {
+          button.style.display = 'inline-block';
+        } else {
+          button.style.display = 'none';
         }
       });
     }
-  });
 
-</script>
-
+    document.addEventListener('DOMContentLoaded', () => {
+      const shutdownButton = document.getElementById('shutdown-button');
+      if (shutdownButton) {
+        shutdownButton.addEventListener('click', () => {
+          if (confirm("Es-tu sûr de vouloir arrêter le serveur ?")) {
+            fetch('/shutdown', { method: 'POST' })
+              .then(() => {
+                document.body.innerHTML = '<h1 style="text-align:center;margin-top:20vh;">🛑 Serveur arrêté</h1>';
+              });
+          }
+        });
+      }
+    });
+  </script>
 </body>
 </html>
